@@ -1,19 +1,8 @@
-//  Table of Contents
-//
-//  Setup Phase         -0103
-//  Unit Printing       -0261
-//  Playing the Game    -0337
-//      Remembering     -0547
-//      Sandboxing      -0616
-//      Commands        -0739
-//      Retreats        -0983
-//      Builds          -1084
-
 const std = @import("std");
-const classic = @import("classic.zig");
-const dip = @import("dip.zig");
-const dip_names = @import("dip_names.zig");
-const dip_memory = @import("dip_memory.zig");
+const classic = @import("classic");
+const dip = @import("dip");
+const dip_names = @import("dip_names");
+const dip_memory = @import("dip_memory");
 
 const Reader = std.io.AnyReader;
 const Writer = std.io.AnyWriter;
@@ -25,7 +14,7 @@ const Names = dip_names.NamesData;
 const Memory = dip_memory.Memory;
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var gpa : std.heap.DebugAllocator(.{}) = .init;
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
@@ -37,7 +26,7 @@ pub fn main() !void {
     try playGame(&game, names, &memory, reader, writer);
 }
 
-/// Returns a struct with `parse` function that return a tuple of objects with types from `types`.
+/// Returns a struct with `parse` function that returns a tuple of objects with types from `types`.
 /// If there is only one type, returns it instead of tuple of 1 element.
 /// See example usage.
 fn Parser(types: []const type, start: ?[]const u8, delimeters: []const []const u8, end: ?[]const u8) type {
@@ -50,13 +39,13 @@ fn Parser(types: []const type, start: ?[]const u8, delimeters: []const []const u
             out_fields[i] = .{
                 .name = std.fmt.comptimePrint("{d}", .{i}),
                 .type = T,
-                .default_value = null,
+                .default_value_ptr = null,
                 .is_comptime = false,
                 .alignment = @alignOf(T),
             };
         }
         const out_type_info = std.builtin.Type{
-            .Struct = .{
+            .@"struct" = .{
                 .layout = .auto,
                 .fields = &out_fields,
                 .decls = &.{},
@@ -197,8 +186,8 @@ fn printOptions(options: Options, writer: Writer) !void {
     inline for (std.meta.fields(Options)) |field| {
         const value = @field(options, field.name);
         switch (@typeInfo(@TypeOf(value))) {
-            .Enum => try writer.print("{s: <25} = {s}\n", .{ field.name, @tagName(value) }),
-            .Bool => try writer.print("{s: <25} = {any}\n", .{ field.name, value }),
+            .@"enum" => try writer.print("{s: <25} = {s}\n", .{ field.name, @tagName(value) }),
+            .bool => try writer.print("{s: <25} = {any}\n", .{ field.name, value }),
             else => unreachable,
         }
     }
@@ -210,13 +199,13 @@ fn printOptionInfo(name: []const u8, writer: Writer) !void {
             try writer.print("{s}\n", .{optionDescription(field.name)});
             try writer.print("Possible values:\n", .{});
             switch (@typeInfo(field.type)) {
-                .Enum => |en| {
+                .@"enum" => |en| {
                     inline for (en.fields) |enum_field| {
                         try writer.print("-{s}\n", .{enum_field.name});
                     }
                     return;
                 },
-                .Bool => {
+                .bool => {
                     try writer.print("-true\n-false\n", .{});
                     return;
                 },
@@ -231,7 +220,7 @@ fn setOption(options: *Options, name: []const u8, value: []const u8, writer: Wri
     inline for (std.meta.fields(Options)) |field| {
         if (std.mem.eql(u8, name, field.name)) {
             switch (@typeInfo(field.type)) {
-                .Enum => {
+                .@"enum" => {
                     if (std.meta.stringToEnum(field.type, value)) |enum_value| {
                         @field(options, field.name) = enum_value;
                         return;
@@ -239,7 +228,7 @@ fn setOption(options: *Options, name: []const u8, value: []const u8, writer: Wri
                         return try writer.print("Invalid value: \"{s}\"\n", .{value});
                     }
                 },
-                .Bool => {
+                .bool => {
                     if (std.mem.eql(u8, value, "true")) {
                         @field(options, field.name) = true;
                         return;

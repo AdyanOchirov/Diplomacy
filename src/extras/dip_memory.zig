@@ -1,5 +1,5 @@
 const std = @import("std");
-const dip = @import("dip.zig");
+const dip = @import("dip");
 
 pub const DummyUnit = struct {
     province: dip.Province,

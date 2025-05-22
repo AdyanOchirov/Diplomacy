@@ -1,5 +1,5 @@
-const dip = @import("dip.zig");
-const dip_names = @import("dip_names.zig");
+const dip = @import("dip");
+const dip_names = @import("dip_names");
 const std = @import("std");
 
 pub const start_year: u16 = 1901;

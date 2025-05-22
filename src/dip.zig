@@ -1,27 +1,3 @@
-//  Table of Contents
-//
-//  Basic definitions         -0030
-//  Map                       -0217
-//  Options                   -0414
-//  Game                      -0501
-//      Simple utils          -0563
-//      Sandbox               -0685
-//      Builds                -0750
-//          Legality          -0859
-//      Disbands              -0906
-//          Legality          -0995
-//      Retreats              -1043
-//          Legality          -1145
-//      Commands              -1204
-//          Legality          -1335
-//      Adjudication          -1475
-//          Civil Disorder    -1665
-//          Retreat Phase     -1757
-//          Move Phase        -1781
-//              Utils         -1781
-//              Resolution    -1926
-//      Legal Iterators       -2286
-
 const std = @import("std");
 
 pub const idint = u16;
@@ -1764,6 +1740,7 @@ pub const Game = struct {
                 retreat.to = null;
             }
             if (retreat.to == null or retreat.status == .illegal) {
+                retreat.status = .failed;
                 continue;
             }
             for (self.retreats.items[i + 1 ..]) |*other| {

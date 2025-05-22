@@ -1,7 +1,7 @@
 const std = @import("std");
-const dip = @import("dip.zig");
-const dip_names = @import("dip_names.zig");
-const classic = @import("classic.zig");
+const dip = @import("dip");
+const dip_names = @import("dip_names");
+const classic = @import("classic");
 
 pub fn setSCOwner(names: dip_names.NamesData, game: *dip.Game, country_name: dip_names.Name, land_name: dip_names.Name) !void {
     const country = try names.countryByName(country_name);

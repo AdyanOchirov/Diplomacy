@@ -1,7 +1,7 @@
 const std = @import("std");
-const dip = @import("dip.zig");
-const dip_names = @import("dip_names.zig");
-const classic = @import("classic.zig");
+const dip = @import("dip");
+const dip_names = @import("dip_names");
+const classic = @import("classic");
 const datc = @import("datc.zig");
 
 // These are some more tests I came up with.

@@ -1,5 +1,5 @@
 const std = @import("std");
-const dip = @import("dip.zig");
+const dip = @import("dip");
 
 pub const Name = []const u8;
 pub const Pair = struct { Name, Name };

@@ -6,11 +6,11 @@ DATC-compliant implementation of board game Diplomacy with a CLI demo showing ex
 
 ## Usage
 
-Supported Zig version is 0.13.0. To build demo, run `zig build`. Tests can be run with `zig build test`.
+Supported Zig version is 0.14.0. To build demo, run `zig build`. Tests can be run with `zig build test`.
 
-If you want to use adjudicator in your project, just copy `dip.zig` optionally with `dip_names.zig` and `dip_memory.zig` to your project.
+If you want to use the adjudicator in your project, just copy `dip.zig` optionally with `dip_names.zig` and `dip_memory.zig` to your project.
 
-To simply play the demo, download the executable from releases.
+To simply play the CLI demo, download the executable from releases.
 
 ## Features
 
@@ -27,16 +27,6 @@ To simply play the demo, download the executable from releases.
 - No ability to save/load board state.
 - Demo requires very strict formatting for accepting orders.
 - No way to produce image of the game state.
-
-## Structure
-
- - `dip.zig` - Contains everything required to play Diplomacy and a little more.
- - `dip_names.zig` - Allows creating and interacting with game using strings.
- - `dip_memory.zig` - Allows storing the information about past board states.
- - `classic.zig` - Data required to setup the map and units for a classic game.
- - `datc.zig` - Tests of adjudication logic. See [DATC](https://www.webdiplomacy.net/doc/DATC_v3_0.html#6)
- - `datc_my.zig` - Not enough of additional tests more closely related to this particular implementation.
- - `demo.zig` - CLI demo.
 
 ## Examples from demo
 
